@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ansible管理平台</title>
+    <link rel="stylesheet" href="/static/css/common.css" />
+    <link rel="stylesheet" href="/static/css/layout.css" />
+    <link rel="stylesheet" href="/static/css/fonts/font-awesome.css"/>
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+    {% block html %}{% endblock %}
+    
+</head>
+<body>
+
+
+    <div class="w" >
+
+      <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <a class="navbar-brand" href="/web/index">易班运维</a>
+        </div>
+        
+          <ul class="nav navbar-nav .navbar-header">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">ansible图形管理 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href='/web/ansible_cmd'>ansible</a></li>
+
+                <li class="active"><a href='/web/ansible_hosts'>ansibile-hosts管理</a></li>
+              </ul>
+            </li>    
+          </ul>
+         
+         <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">线上服务器管理 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href='/web/list'>服务器管理</a></li>
+                <li><a href='/web/add'>服务器添加</a></li>
+                <li class="divider"></li>
+           
+              </ul>
+            </li>    
+          </ul>
+
+       
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">通知 <span class="navbar-unread" >0</span></a></li>
+      
+            <li class="active"><a href='/web/logout/'>退出</a></li>
+           </ul>
+         
+
+        </div><!-- /.navbar-collapse -->
+      </nav>
+
+
+    </div>
+
+   
+        <div class="pg-body" >
+            <div class="body-tree-menu left" id="scalable-menu" >
+                <div class="scalable-menu-title" style="position:relative;">
+
+
+                </div>
+                <div class="scalable-menu-body">
+                    <div class="item">
+                        <div class="title clearfix">
+                            <div class="left"><i class="fa fa-indent"></i><span>ansbile web</span></div>
+                            <div class="right"><i class="fa fa-caret-down fa-caret-up"></i></div>
+                        </div>
+                        <div class="body">
+                            <a id="home_summary" class="option clearfix  {% block ansiblecmd %}{% endblock %}" href="/web/ansible_cmd/">
+                                <div>
+                                    <img class="left" src="/static/img/layout/dash.png" alt="">
+                                    <span class="display left">ansible执行</span>
+                                </div>
+                            </a>
+
+
+                            <a id="asset_alteration" class="option clearfix   {% block ansible_hosts %}{% endblock %}"  href="/web/ansible_hosts/">
+                                <div>
+                                    <img class="left" src="/static/img/layout/dash.png" alt="">
+                                    <span class="display left">ansible_hosts管理</span>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="item">
+                        <div class="title clearfix">
+                            <div class="left"><i class="fa fa-user"></i><span>服务器在线管理</span></div>
+                            <div class="right"><i class="fa fa-caret-down"></i></div>
+                        </div>
+                        <div class="body hide">
+                            <a id="user_index" class="option clearfix" href="/web/list/">
+                                <div>
+                                    <img class="left" src="/static/img/layout/dash.png" alt="">
+                                    <span class="display left">服务器一览</span>
+                                </div>
+                            </a>
+                            <a id="user_changepwd" class="option clearfix" href="/web/add/">
+                                <div>
+                                    <img class="left" src="/static/img/layout/dash.png" alt="">
+                                    <span class="display left" >服务器增加</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="body_crumbs" class="body-crumbs">
+                <ul>
+
+                    <li><a href="/web/index/">首页</a></li>
+                    <li>资产概要</li>
+
+                </ul>
+
+            </div>
+
+            <div id="body_content" class="body-content left">
+                <div class="main-content">
+                
+
+                    <!-- 遮罩层开始 -->
+                    <div id="shade" class="shade hide">
+                    {% block content %}{% endblock %}
+                    </div>
+                    <!-- 遮罩层结束 -->
+                    <!-- 加载层开始 -->
+                    {% block footer %}{% endblock %}
+                    <div id="loading" class="loading hide"></div>
+                    <!-- 加载层结束 -->
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/static/js/jquery-2.1.4.min.js">
+    {% block js %} {%endblock%}
+    </script>
+    <script type="text/javascript" src="/static/js/layout.js"></script>
+    
+
+
+
+</body>
+</html>

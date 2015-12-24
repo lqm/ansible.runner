@@ -1,0 +1,200 @@
+#!/usr/bin/env python
+#coding:utf-8
+
+from django.shortcuts import render
+from django.shortcuts import render_to_response,redirect
+from django.http.response import HttpResponse
+from web.models import Asset,UserInfo,machine_list
+from django.template.context import RequestContext
+from django.utils.safestring import mark_safe
+from web import common
+from web import views_hellper
+from web import html_hellper
+
+# Create your views here.
+
+def Login(request):
+    if request.method == 'POST':
+        
+        user = request.POST.get('username',None)
+        pwd =  request.POST.get('password',None)
+        print user
+        print pwd
+        status = 'hello'
+        
+        #检查用户名和密码是否存在，
+        b = UserInfo.objects.all()
+        print b
+        result = UserInfo.objects.filter(username=user,password=pwd).count()
+        message = '失败'
+        print result
+        if result == 1:
+            request.session['member_id']= {'user':user}
+            return redirect('/web/index/')
+        else:
+            return render_to_response('login.html', {'hello':b})
+        
+    else:
+        return render_to_response('login.html')
+    
+def logout(request):
+    #销毁session
+    del request.session['member_id']
+    return redirect('/web/login/')
+
+def index(request):
+    #asset_list = Asset.objects.all()
+    user_dict = request.session.get('member_id',None)
+    if user_dict:
+        return render_to_response('index.html',{'username':user_dict['user']})
+    else:
+        return redirect('/web/login')
+    #把数据嵌套在html中，
+    #新字符串返回给用户
+    
+
+def machine_add(request):
+    user_dict = request.session.get('member_id',None)
+    if user_dict:
+       asset_list = Asset.objects.all()
+       result = render_to_response('add.html')
+       return result
+    #把数据嵌套在html中，
+    #新字符串返回给用户
+    else:
+        return redirect('/web/login')
+def machine(request):
+    obj_list = machine_list.objects.values_list('Use_by_group')
+    obj_list = obj_list.distinct()
+    
+    
+    obj_list = views_hellper.str_change(obj_list)
+    obj_list.pop(0)
+    
+    
+    
+   
+    pass
+    return render_to_response('machadd.html', {'obj_list': obj_list})
+   
+def motify_machine(request):
+    asset_list = Asset.objects.all()
+    
+    #把数据嵌套在html中，
+    #新字符串返回给用户
+    result = render_to_response('motify_machine.html')
+    return result
+
+
+def motify_list(request,page):
+    obj_list = machine_list.objects.values_list('Use_by_group')
+    obj_list = obj_list.distinct()
+    
+    
+    obj_list = views_hellper.str_change(obj_list)
+    obj_list.pop(0)
+    ret = {'obj_list': obj_list}
+   # print request.POST.has_key
+    request.session['group_selected'] = ''
+    
+    if request.method == "POST":
+     
+        
+         if request.POST.has_key('a'):
+            
+            
+            if request.session['group_selected'] == '':   
+               print "hello world"
+               group = request.POST.get('a',None)
+               print group
+               request.session['group_selected'] = group
+               print request.session['group_selected']
+            else:
+               
+               print "fuckyou"
+               print request.session.get['group_selected']
+               group = request.session.get['group_selected']
+               print group
+
+            
+            page = common.try_int(page,1)
+            per_item = 5 #设置以5页为分割
+            start = (page-1)*5
+            end = page*5
+            
+            count = machine_list.objects.filter(Use_by_group=group).count()
+            #count = machine_list.objects.all().count()
+
+            #result = machine_list.objects.all()[start:end]
+            result = machine_list.objects.filter(Use_by_group=group)[start:end]
+
+
+            all_pages_temp = divmod(count,per_item)
+            
+            if all_pages_temp[1] == 0:
+                all_pages = all_pages_temp[0]
+            else:
+                all_pages = all_pages_temp[0]+1
+                
+            older_page = page -1
+            newer_page = page +1
+                
+            
+            page_html = []
+            first_html = "<li><a href='/web/list/%d'>首页</a></li>"  %(1,)
+            page_html.append(first_html)
+            #上一页逻辑设置
+            if page <= 1:
+                older_html = "<li><a href='/web/list/#'>上页</a></li>"
+            else: 
+                older_html = "<li><a href='/web/list/%d'>上页</a></li>"  %(older_page,)
+            page_html.append(older_html)
+            
+            if all_pages <5:
+                begin = 0
+                end = all_pages
+            else:
+                if page<5:
+                    begin = 0
+                    end = 6
+                else:
+                    if page + 3 > all_pages:
+                        begin = page -3
+                        end = all_pages
+                    else:
+                        begin = page -3
+                        end = page +2
+                         
+            for i in range(begin,end):  #i从0开始循环
+                if page == i+1:
+                     a_html =  "<li><a class='dropdown open' href='/web/list/%d'>%d</a></li>"   %(i+1,i+1)
+                else:
+                    a_html =  "<li><a  href='/web/list/%d'>%d</a></li>"   %(i+1,i+1)
+                page_html.append(a_html)
+            #下一页
+            if page+1 > all_pages:
+                newer_html = "<li><a href='/web/list/#'>上页</a></li>"    
+            else:
+                newer_html =  "<li><a href='/web/list/%d'>下页</a></li>"  %(newer_page,)       
+            page_html.append(newer_html)       
+            
+            end_html =  "<li><a href='/web/list/%d'>尾页</a></li>"  %(all_pages,)       
+            page_html.append(end_html)
+            
+            page = mark_safe("".join(page_html)) 
+            print result
+            ret = {'shuju':result,'count':count,'page':page,'obj_list': obj_list}
+            print type(ret)
+         else:
+            pass
+
+
+
+    else:
+         print request.session
+
+       
+    response = render_to_response('machinelist.html',ret)
+    return response
+    
+

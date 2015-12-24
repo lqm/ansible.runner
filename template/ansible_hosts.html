@@ -1,0 +1,94 @@
+{% extends "master/layout.html" %}
+ {% block html %}
+ <title>ansible管理平台</title>
+ <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+ <link href="/static/css/flat-ui.min.css" rel="stylesheet">
+ {% endblock %}
+ {% block ansible_hosts %}selected{% endblock %}
+
+{% block footer %}
+   <div class="container">
+     
+
+      <h6>ansible组分类</h6>
+        <nav class="navbar navbar-default" role="navigation">
+          <ul class="nav navbar-nav .navbar-header">
+            <li class="dropdown">
+      <form action="/web/ansible_hosts/" method="post" >
+        <select data-toggle="select" class="form-control select select-default mrs mbm " name="user_selected"  >
+      
+      
+          {% for obj in obj_list %}          
+               <option  name={{obj}}>{{ obj }}</option>
+          {% endfor %}
+          <input type="submit" value="查询" class="btn">
+        </select>
+      </form>
+          </li>    
+          </ul>
+
+
+         
+         
+         
+         
+          
+         
+
+        
+      
+         </nav>
+            
+     </div>
+     
+
+     
+     
+     
+     
+     
+     
+         <hr size="3" color="blue" style="filter:alpha(opacity=10,finishopacity=100,style=1,startX=0,startY=0,finishX=100,finishY=100);width:490;"> 
+         
+           <!-- Table -->
+<table class="table">
+        <thead>
+          <tr>
+            <th>ansible_name</th>
+            <th>ip</th>
+
+          </tr>
+        </thead>
+        <tbody>
+        
+    
+     
+        {% for zhu,ip in data %}
+       
+			<tr>
+			    <td class="hostnmae">{{zhu}}</td>
+				<td class="hostnmae">{{ip}}</td>
+			
+			</tr>	
+	  	
+		{% endfor %}
+		
+        </tbody>
+      </table>
+         
+{% endblock %}
+
+
+ {% block js %}
+      
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/flat-ui.min.js"></script>
+     <script src="/static/js/application.js"></script>
+     
+
+     
+     
+  {%endblock%}

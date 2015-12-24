@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+
+<html>
+     <head>
+		<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="/static/css/flat-ui.min.css" rel="stylesheet">
+  <style type="text/css"> 
+  .wrap {
+    margin: 20px auto;
+    display: block;
+    width: 1200px;
+    height: 500px;
+    padding:20px;
+    background: #D4DEDF;
+    box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+    background: -webkit-linear-gradient(90deg, #D4DEDF, #DCDCDE);
+   
+    }
+   </style>
+    <title>ansible管理平台</title>
+
+
+
+	 </head>
+	 <body>
+
+   <div class="container">
+      <h4>Select</h4>
+
+      <h6>Big string</h6>
+      <form action="/web/list/" method="post">
+        <select data-toggle="select" class="form-control select select-default mrs mbm " onchange="showSelect(this.value)" name="a">
+          {% for obj in obj_list %}          
+          <option name={{obj}}>{{ obj }}</option>
+          {% endfor %}
+ 
+        </select>
+
+
+
+      </form>
+
+
+     </div>
+     <hr size="3" color="blue" style="filter:alpha(opacity=10,finishopacity=100,style=1,startX=0,startY=0,finishX=100,finishY=100);width:490;"> 
+    
+
+     
+     <div class="container wrap opacity"    >
+    <div class="pagination pagination-inverse" >
+
+            <ul>
+            {{page}}
+            </ul>
+
+  <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">服务器在线一览</div>
+  <div class="panel-body">
+
+
+
+
+  <!-- Table -->
+<table class="table">
+        <thead>
+          <tr>
+            
+            <th>IP</th>
+            <th>hostname</th>
+            <th>所属组</th>
+            <th>项目组</th>
+            <th>开发联络人</th>
+            <th>操作 </th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in data %}
+			<tr>
+				<td>{{item.hostname}}</td>
+				<td>{{item.ip_address}}</td>
+				<td>{{item.Use_by_group}}</td>
+				<td>{{item.group_list}}</td>
+				<td>{{item.contact_dev}}</td>
+				<td><a class="btn btn-info btn-sm" href="#"></a></td>
+			</tr>		
+		{% endfor %}
+        </tbody>
+      </table>
+      <div>总条数:{{count}}</div>
+</div>
+  </div>     
+     
+     
+    </div> 
+     
+     </div>  
+      </div >
+      
+      
+
+      
+  
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/flat-ui.min.js"></script>
+     <script src="/static/js/application.js"></script>
+    </hr>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('select[name="inverse-dropdown"], select[name="inverse-dropdown-optgroup"], select[name="inverse-dropdown-disabled"]').select2({dropdownCssClass: 'select-inverse-dropdown'});
+
+        $('select[name="searchfield"]').select2({dropdownCssClass: 'show-select-search'});
+        $('select[name="inverse-dropdown-searchfield"]').select2({dropdownCssClass: 'select-inverse-dropdown show-select-search'});
+      });
+     function showSelect(str) {
+         var xmlhttp;
+         console.log(str)
+         var tmp = str
+         $.ajax({
+             url:'/web/list/',
+             type:'POST',
+             data:{dat:tmp},
+
+         })
+     }
+    </script>
+	 </body>
+

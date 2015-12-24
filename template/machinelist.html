@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+
+<html>
+     <head>
+		<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="/static/css/flat-ui.min.css" rel="stylesheet">
+     <link rel="shortcut icon" href="/static/img/favicon.ico">
+    
+  <style type="text/css"> 
+  .wrap {
+    margin: 20px auto;
+    display: block;
+    width: 1200px;
+    height: 500px;
+    padding:20px;
+    background: #D4DEDF;
+    box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+    background: -webkit-linear-gradient(90deg, #D4DEDF, #DCDCDE);
+   
+    }
+   </style>
+    <title>ansible管理平台</title>
+
+
+
+	 </head>
+	 <body>
+
+   <div class="container">
+     
+
+      <h6>在线服务器状态查询</h6>
+        <nav class="navbar navbar-default" role="navigation">
+          <ul class="nav navbar-nav .navbar-header">
+            <li class="dropdown">
+      <form action="/web/list/" method="post" >
+        <select data-toggle="select" class="form-control select select-default mrs mbm " name="user_selected"  >
+          {% for obj in obj_list %}          
+               <option  name={{obj}}>{{ obj }}</option>
+          {% endfor %}
+          <input type="submit" value="查询" class="btn">
+        </select>
+      </form>
+          </li>    
+          </ul>
+             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+           <li class="active"><a href='/web/index/'>返回首页</a></li>
+            <li class="active"><a href='/web/logout/'>退出</a></li>
+           </ul>
+         
+
+        </div><!-- /.navbar-collapse -->
+       </nav>
+
+
+
+
+
+
+
+
+
+
+
+     </div>
+     <hr size="3" color="blue" style="filter:alpha(opacity=10,finishopacity=100,style=1,startX=0,startY=0,finishX=100,finishY=100);width:490;"> 
+    
+
+     
+     <div class="container wrap opacity"    >
+    <div class="pagination pagination-inverse" >
+
+            <ul>
+            {{page}}
+            </ul>
+
+  <div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">服务器在线一览</div>
+  <div class="panel-body">
+
+
+
+
+  <!-- Table -->
+<table class="table">
+        <thead>
+          <tr>
+           
+            <th>hostname</th>
+            <th>IP</th>
+            <th>所属组</th>
+            <th>项目组</th>
+            <th>开发联络人</th>
+            <th>操作 </th>
+          </tr>
+        </thead>
+        <tbody>
+        
+    
+     
+        {% for item in shuju %}
+       
+			<tr>
+				<td class="hostnmae">{{item.hostname}}</td>
+				<td class="ip">{{item.ip_address}}</td>
+				<td>{{item.Use_by_group}}</td>
+				<td>{{item.group_list}}</td>
+				<td>{{item.contact_dev}}</td>
+				<td><a class="btn btn-info btn-sm" href=/web/modify?ip={{item.ip_address}}>修改</a></td> 
+				 <td><a class="delete btn btn-info btn-sm delete_machine"  data-toggle="modal" data-target="#myModal" >删除</a></td>
+			</tr>	
+	  	
+		{% endfor %}
+		
+        </tbody>
+      </table>
+      <div>总条数:{{count}}</div>
+</div>
+  </div>     
+     
+     
+    </div> 
+     
+     </div>  
+      </div >
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+                                             是否删除服务器
+            </h4>
+         </div>
+          
+         <div class="modal-body dl-horizontal">
+                          <dt>ip地址:</dt>
+                          <dd id="set_ip"></dd>
+                          <dt>hostname：</dt>
+                          <dd id="set_hostname"></dd>
+                        
+                           
+         </div>
+         <div class="modal-footer">
+          <form action="/web/list/" method="post">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+      
+            <button type="button" class="btn btn-primary" onclick='DoAjax()' >
+                                        提交更改
+            </button>
+            </form>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+
+      
+  
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/flat-ui.min.js"></script>
+     <script src="/static/js/application.js"></script>
+    </hr>
+    <script type="text/javascript">
+
+$(document).ready(function(){
+    $(".delete").each(function(){
+	$(this).click(function(){
+	
+	   var set_hostname=$(this).parent().siblings(".hostnmae").html();
+	   var set_ip=$(this).parent().siblings(".ip").html();
+	   
+	   
+	
+	   document.getElementById("set_hostname").innerHTML=set_hostname;
+	   document.getElementById("set_ip").innerHTML=set_ip;
+	});
+    });
+});
+
+      
+
+
+     
+     function DoAjax(){
+     var temp =document.getElementById('set_ip').innerHTML;
+     console.log(temp),
+
+     $.ajax({
+					url:'/web/list/',
+					type:'get',
+					data:{dat:temp},
+					success:function(arg){
+		                  console.log('fuck')
+		                  alert('嘿嘿，已被删除')
+					},
+					error:function(){
+						console.log('failed')
+					}
+				});
+     }
+     
+    </script>
+	 </body>
+

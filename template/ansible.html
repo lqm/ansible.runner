@@ -1,0 +1,108 @@
+{% extends "master/layout.html" %}
+ {% block html %}
+ <title>ansible管理平台</title>
+ <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+ <link href="/static/css/flat-ui.min.css" rel="stylesheet">
+ {% endblock %}
+{% block ansiblecmd %}selected{% endblock %}
+{% block footer %}
+   <div class="container">
+     
+
+      <h6>ansible命令执行</h6>
+        <nav class="navbar navbar-default" role="navigation">
+          <ul class="nav navbar-nav .navbar-header">
+            <li class="dropdown">
+      <form action="/web/ansible_cmd/" method="post"  class="form-inline">
+      <label >组</label>
+        <select data-toggle="select" class="form-control select select-default mrs mbm " name="user_selected"  >
+       
+          {% for obj in obj_list %}          
+               <option  name={{obj}}>{{ obj }}</option>
+          {% endfor %}
+  
+        </select>
+          <div class="form-group">
+    <label for="exampleInputName2">Name</label>
+    <input type="text" class="form-control" id="exampleInputName2" placeholder="ansible用户" name="remote_user">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputpasswd2">password</label>
+    <input type="password" class="form-control" id="exampleInputpasswd2" placeholder="用户密码" name="remote_pass">
+  </div>
+ 
+        
+        <div class="inline">
+         <input type="search" class="form-control" id="exampleInputEmail2" placeholder="远程命令执行" name="user_cmd" style="width:760px">
+         <button type="submit" class="btn btn-default">提交查询</button>
+        </div>
+         
+        
+        
+      </form>
+          </li>    
+
+         
+
+        </div><!-- /.navbar-collapse -->
+         </nav>
+     </div>
+     
+     
+     
+     
+         <hr size="3" color="blue" style="filter:alpha(opacity=10,finishopacity=100,style=1,startX=0,startY=0,finishX=100,finishY=100);width:490;"> 
+         
+           <!-- Table -->
+<table class="table">
+        <thead>
+
+        </thead>
+        <tbody>
+        
+      {% for key,value in results_DOWN.items %}
+           <tr>
+              <td>执行失败</td>
+              {% for key,value in results_DOWN.items %}
+                <td>{{key}}</td>
+                <td> {{value}}</td>
+              {% endfor %}
+    
+               
+             </tr>
+      {% endfor %}
+      
+      {% for key,value in results_failed.items %}
+             <tr>
+              <td>执行失败</td>
+                <td>{{key}}</td>
+                <td> {{value}}</td>
+              </tr>  
+      {% endfor %}
+      
+      {% for key,value in resutls_UP.items %}
+           <tr>
+              <td> 执行成功</td>
+            
+              <td data-field='name'>{{key}}</td>
+               <td data-field='price'> {{value}}</td>
+
+
+	
+            </tr>
+               {% endfor %}
+        </tbody>
+      </table>
+         
+{% endblock %}
+
+
+ {% block js %}
+      
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/flat-ui.min.js"></script>
+     <script src="/static/js/application.js"></script>
+  {%endblock%}
